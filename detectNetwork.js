@@ -14,14 +14,50 @@ var detectNetwork = function(cardNumber) {
 
   // Once you've read this, go ahead and try to implement this function, then return to the console.
   var length = cardNumber.length;
-  var prefix = cardNumber.slice(0, 2);
-  if (length === 14 && (prefix === '38' || prefix === '39')) {
-      return 'Diner\'s Club';
-  } else if (length === 15 && (prefix === '34' || prefix === '37')) {
-      return 'American Express';
+  if (cardNumber.slice(0, 1) === '4') {
+    var prefix = '4';
   } else {
-      return 'card invalid';
+    prefix = cardNumber.slice(0, 2);
   }
-};
+  var network = {};
+  network.prefix = prefix
+  network.length = length
+
+  var AmEx = {
+    prefix: ['34', '37'],
+    length: [15],
+    name: 'American Express'
+  };
+
+  var DinClub = {
+    prefix: ['38', '39'],
+    length: [14],
+    name: 'Diner\'s Club'
+  };
+
+  var Visa = {
+    prefix: ['4'],
+    length: [13, 16, 19],
+    name: 'Visa'
+  };
+
+  var MastCard = {
+    prefix: ['51', '52', '53', '54', '55'],
+    length: [16],
+    name: 'MasterCard'
+  };
+  
+  var networks = [AmEx, DinClub, Visa, MastCard]
+
+  networks.forEach(function(net) {
+    if (net.prefix.indexOf(network.prefix) + 1 &&
+        net.length.indexOf(network.length) + 1) {
+          return network.name = net.name;
+        }
+  });
+  return network.name;
+}
+  
+
 
 
