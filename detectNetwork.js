@@ -14,8 +14,23 @@ var detectNetwork = function(cardNumber) {
 
   // Once you've read this, go ahead and try to implement this function, then return to the console.
   var length = cardNumber.length;
-  if (cardNumber.slice(0, 1) === '4') {
-    var prefix = '4';
+
+  var sixDigitPrefixes = ['564182', '633110'];
+  rangePush(sixDigitPrefixes, 622126, 622925)
+
+  var fourDigitPrefixes = ['6011', '5018', '5020', '5038', '6304', '4903', '4905', '4911', '4936', '6333', '6759'];
+  rangePush(fourDigitPrefixes, 6282, 6288);
+
+  var threeDigitPrefixes = ['644', '645', '646', '647', '648', '649', '624', '625', '626']
+
+  if (sixDigitPrefixes.indexOf(cardNumber.slice(0, 6)) !== -1) {
+    var prefix = cardNumber.slice(0, 6);
+  } else if (fourDigitPrefixes.indexOf(cardNumber.slice(0, 4)) !== -1) {
+    prefix = cardNumber.slice(0, 4);
+  } else if (threeDigitPrefixes.indexOf(cardNumber.slice(0, 3)) !== -1) {
+    prefix = cardNumber.slice(0, 3);
+  } else if (cardNumber.slice(0, 1) === '4') {
+      var prefix = '4';
   } else {
     prefix = cardNumber.slice(0, 2);
   }
@@ -46,8 +61,37 @@ var detectNetwork = function(cardNumber) {
     length: [16],
     name: 'MasterCard'
   };
+
+  var Discover = {
+    prefix: ['6011', '644', '645', '646', '647', '648', '649', '65'],
+    length: [16, 19],
+    name: 'Discover'
+  }
+
+  var Maestro = {
+    prefix: ['5018', '5020', '5038', '6304'],
+    length: [12, 13, 14, 15, 16, 17, 18, 19],
+    name: 'Maestro'
+  }
   
-  var networks = [AmEx, DinClub, Visa, MastCard]
+  var chUnPayArray = [];
+  rangePush(chUnPayArray, 622126, 622925)
+  rangePush(chUnPayArray, 624, 626)
+  rangePush(chUnPayArray, 6282, 6288)
+
+  var ChUnPay = {
+    prefix: chUnPayArray,
+    length: [16, 17, 18, 19],
+    name: 'China UnionPay'
+  }
+
+  var Switch = {
+    prefix: ['4903', '4905', '4911', '4936', '564182', '633110', '6333', '6759'],
+    length: [16, 18, 19],
+    name: 'Switch'
+  }
+  
+  var networks = [AmEx, DinClub, Visa, MastCard, Discover, Maestro, ChUnPay, Switch]
 
   networks.forEach(function(net) {
     if (net.prefix.indexOf(network.prefix) + 1 &&
@@ -58,6 +102,13 @@ var detectNetwork = function(cardNumber) {
   return network.name;
 }
   
+function rangePush(array, start, end) {
+  var counter = start - 1;
+  for (var i = 0; i < end - start + 1; i++) {
+    counter = counter + 1;
+    array.push(counter.toString());
+  }
+}
 
 
 
