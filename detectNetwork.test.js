@@ -343,5 +343,85 @@ describe('Maestro', function() {
 
 });
 
-describe('should support China UnionPay')
-describe('should support Switch')
+describe('China UnionPay', function() {
+  var expect = chai.expect;
+
+  // for (var prefix = 622126; prefix <= 622925; prefix++) {
+  //   (function(prefix) {
+  //     it('has a prefix of ' + prefix + ' and a length of 16');
+  //     it('has a prefix of ' + prefix + ' and a length of 19');
+  //   })(prefix)
+  // }
+
+  // for (var prefix = 624; prefix <= 626; prefix++) {
+  //   (function(prefix) {
+  //     it('has a prefix of ' + prefix + ' and a length of 16');
+  //     it('has a prefix of ' + prefix + ' and a length of 19');
+  //   })(prefix)
+  // }
+
+  // for (var prefix = 6282; prefix <= 6288; prefix++) {
+  //   (function(prefix) {
+  //     it('has a prefix of ' + prefix + ' and a length of 16');
+  //     it('has a prefix of ' + prefix + ' and a length of 19');
+  //   })(prefix)
+  // }
+
+  var chUnPayArray = [];
+  rangePush(chUnPayArray, 622126, 622925)
+  rangePush(chUnPayArray, 624, 626)
+  rangePush(chUnPayArray, 6282, 6288)
+
+  var lengths = [16, 17, 18, 19];
+
+  for (let i = 0; i < chUnPayArray.length; i++) {
+    for (let j = 0; j < lengths.length; j++) {
+      let num = numGenerator(chUnPayArray[i], lengths[j])
+      it('has a prefix of ' + chUnPayArray[i] + ' and a length of ' + lengths[j], function() {
+        expect(detectNetwork(num)).to.equal('China UnionPay')
+      });
+    }
+  }
+
+})
+
+describe('Switch', function() {
+  var expect = chai.expect;
+
+  var prefixes = ['4903', '4905', '4911', '4936', '564182', '633110', '6333', '6759'];
+
+  var lengths = [16, 18, 19];
+
+  for (let i = 0; i < prefixes.length; i++) {
+    for (let j = 0; j < lengths.length; j++) {
+      let num = numGenerator(prefixes[i], lengths[j])
+      it('has a prefix of ' + prefixes[i] + ' and a length of ' + lengths[j], function() {
+        expect(detectNetwork(num)).to.equal('Switch')
+      });
+    }
+  }
+})
+
+function numGenerator(prefix, length) {
+  var digits = [];
+    var digit = length - prefix.length;
+    for (var i = 0; i < digit; i++) {
+      digits.push(getRandomIntInclusive(0, 9));
+    }
+    return prefix + digits.join('').toString();
+}
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function rangePush(array, start, end) {
+  var counter = start - 1;
+  for (var i = 0; i < end - start + 1; i++) {
+    counter = counter + 1;
+    array.push(counter.toString());
+  }
+}
+
